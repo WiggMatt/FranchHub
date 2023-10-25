@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>ru.accelerator</groupId>
 	<artifactId>FranchHub</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<name>FranchHub</name>
 	<description>Franchise catalog</description>
 	<properties>
@@ -56,23 +56,17 @@
 			<version>1.18.24</version>
 			<scope>provided</scope>
 		</dependency>
-		<!-- Шаблонизатор HTML-файлов -->
-		<dependency>
-			<groupId>org.thymeleaf</groupId>
-			<artifactId>thymeleaf</artifactId>
-			<version>3.1.1.RELEASE</version>
-		</dependency>
 		<!-- Для работы с базой данных -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 			<version>3.1.1</version>
 		</dependency>
-		<!-- Драйвер для MariaDB -->
+		<!-- Драйвер для PostgreSQL -->
 		<dependency>
-			<groupId>org.mariadb.jdbc</groupId>
-			<artifactId>mariadb-java-client</artifactId>
-			<version>3.1.4</version>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>42.6.0</version>
 		</dependency>
 	</dependencies>
 
