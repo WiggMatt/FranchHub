@@ -1,22 +1,23 @@
 package ru.accelerator.FranchHub.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.accelerator.FranchHub.exceptions.UserAlreadyExistException;
-import ru.accelerator.FranchHub.models.UserModel;
+import ru.accelerator.FranchHub.entity.UserEntity;
 import ru.accelerator.FranchHub.services.UserService;
 
 @RestController
 @RequestMapping("/users")
-public class UsersController {
+public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping
-    public ResponseEntity registration(@RequestBody UserModel userModel) {
+    @PostMapping("/signup")
+    public ResponseEntity registration(@RequestBody UserEntity userEntity) {
         try {
-            userService.registration(userModel);
+            userService.registration(userEntity);
             return ResponseEntity.ok().body("Пользователь был успешно сохранен!");
         } catch (UserAlreadyExistException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -25,10 +26,15 @@ public class UsersController {
         }
     }
 
-    @GetMapping
-    public ResponseEntity getHome() {
+    @PostMapping("/login")
+    public ResponseEntity login(@RequestBody UserEntity userEntity) {
         try {
-            return ResponseEntity.ok().body("Вы на вкладке users!");
+            boolean authorized = userService.authorization(userEntity.getEmail(), userEntity.getPassword());
+            if (authorized) {
+                return ResponseEntity.ok().body("Успешная авторизация!");
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Неверный email или пароль!");
+            }
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Произошла ошибка!");
         }

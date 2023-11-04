@@ -3,9 +3,9 @@ package ru.accelerator.FranchHub.repository;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
-import ru.accelerator.FranchHub.models.UserModel;
+import ru.accelerator.FranchHub.entity.UserEntity;
 
 @Repository
-public interface UserRepository extends CrudRepository<UserModel, Integer> {
-    UserModel findByEmail (String email);
+public interface UserRepository extends CrudRepository<UserEntity, Integer> {
+    UserEntity findByEmail (String email);
 }

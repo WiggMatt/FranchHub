@@ -1,14 +1,14 @@
-package ru.accelerator.FranchHub.models;
+package ru.accelerator.FranchHub.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
 @Data
-public class UserModel {
+public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int owner_id;
+    private int user_id;
     @Column(nullable = false, columnDefinition = "VARCHAR(30)")
     private String name;
     @Column(nullable = false, columnDefinition = "VARCHAR(30)")
