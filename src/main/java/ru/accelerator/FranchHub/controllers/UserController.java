@@ -15,7 +15,7 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/signup")
-    public ResponseEntity registration(@RequestBody UserEntity userEntity) {
+    public ResponseEntity<String> registration(@RequestBody UserEntity userEntity) {
         try {
             userService.registration(userEntity);
             return ResponseEntity.ok().body("Пользователь был успешно сохранен!");
@@ -27,7 +27,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody UserEntity userEntity) {
+    public ResponseEntity<String> login(@RequestBody UserEntity userEntity) {
         try {
             boolean authorized = userService.authorization(userEntity.getEmail(), userEntity.getPassword());
             if (authorized) {
