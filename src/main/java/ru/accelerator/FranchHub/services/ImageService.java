@@ -8,7 +8,7 @@ import ru.accelerator.FranchHub.repository.ImageRepository;
 import java.io.IOException;
 
 @Service
-public class TestImageService {
+public class ImageService {
     @Autowired
     private ImageRepository imageRepository;
 

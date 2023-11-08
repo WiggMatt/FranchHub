@@ -81,8 +81,8 @@ public class FranchiseEntity {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private UserEntity owner;
-    /*@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "franchise")
-    private List<ImageEntity> images = new ArrayList<>();*/
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "franchise")
+    private List<ImageEntity> images = new ArrayList<>();
     //TODO: Возможно, стоит сделать FK на таблицу с изображениями
     @Column(columnDefinition = "INTEGER")
     private int previewImageId;

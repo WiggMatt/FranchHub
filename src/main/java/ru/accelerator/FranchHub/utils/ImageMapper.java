@@ -6,14 +6,13 @@ import ru.accelerator.FranchHub.entity.ImageEntity;
 
 import java.io.IOException;
 
-/*
 @Component
 public class ImageMapper {
-    private static ImageEntity imageToImageEntity(MultipartFile file) throws IOException {
+    public static ImageEntity toImageEntity(MultipartFile file) throws IOException {
         ImageEntity image = new ImageEntity();
         image.setSize(file.getSize());
         image.setContentType(file.getContentType());
         image.setImageData(file.getBytes());
         return image;
     }
-}*/
+}
