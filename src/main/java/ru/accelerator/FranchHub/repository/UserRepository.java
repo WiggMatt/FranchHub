@@ -8,4 +8,5 @@ import ru.accelerator.FranchHub.entity.UserEntity;
 @Repository
 public interface UserRepository extends CrudRepository<UserEntity, Integer> {
     UserEntity findByEmail (String email);
+    UserEntity findById (int id);
 }

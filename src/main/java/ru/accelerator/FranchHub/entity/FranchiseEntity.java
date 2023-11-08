@@ -20,17 +20,17 @@ public class FranchiseEntity {
     @Column(nullable = false, columnDefinition = "VARCHAR")
     private String innLink;
     @Column(nullable = false, columnDefinition = "SMALLINT")
-    private String yearOfCompanyOpening;
+    private short yearOfCompanyOpening;
     @Column(nullable = false, columnDefinition = "SMALLINT")
-    private String franchiseStartYear;
+    private short franchiseStartYear;
     @Column(nullable = false, columnDefinition = "SMALLINT")
-    private String numberOfOwnPoints;
+    private short numberOfOwnPoints;
     @Column(nullable = false, columnDefinition = "SMALLINT")
-    private String numberOfFranchisePoints;
+    private short numberOfFranchisePoints;
     @Column(nullable = false, columnDefinition = "VARCHAR(30)")
     private String cityHeadOffice;
     @Column(nullable = false, columnDefinition = "INTEGER")
-    private String registeredTrademarkNumber;
+    private int registeredTrademarkNumber;
     @Column(nullable = false, columnDefinition = "VARCHAR(30)")
     private String dateOfTrademarkRegistration;
     @Column(nullable = false, columnDefinition = "VARCHAR(30)")
@@ -46,7 +46,7 @@ public class FranchiseEntity {
     @Column(nullable = false, columnDefinition = "VARCHAR(30)")
     private String monthlyProfit;
     @Column(nullable = false, columnDefinition = "SMALLINT")
-    private String businessLaunchDeadline;
+    private short businessLaunchDeadline;
     @Column(nullable = false, columnDefinition = "VARCHAR(30)")
     private String geographyOfDevelopment;
     @Column(nullable = false, columnDefinition = "VARCHAR(30)")

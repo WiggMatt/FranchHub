@@ -4,63 +4,50 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ru.accelerator.FranchHub.dto.FranchiseDTO;
-import ru.accelerator.FranchHub.entity.FranchiseEntity;
+import ru.accelerator.FranchHub.dto.FranchiseCreateDTO;
+import ru.accelerator.FranchHub.dto.FranchiseDetailDTO;
+import ru.accelerator.FranchHub.dto.FranchiseHomeScreenDTO;
 import ru.accelerator.FranchHub.services.FranchiseService;
-import ru.accelerator.FranchHub.services.ImageService;
+
+import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping
 public class HomeController {
     @Autowired
     private FranchiseService franchiseService;
-    @Autowired
-    private ImageService imageService;
 
     @GetMapping("/home")
-    public Iterable<FranchiseDTO> listFranchises() {
+    public Iterable<FranchiseHomeScreenDTO> listFranchises() {
         return franchiseService.readAll();
     }
 
     @GetMapping("/detail/{title}")
-    public ResponseEntity<FranchiseDTO> franchiseDetail(@PathVariable String title) {
+    public ResponseEntity<FranchiseDetailDTO> franchiseDetail(@PathVariable String title) {
         return ResponseEntity.ok(franchiseService.getDetail(title));
     }
 
-    //TODO: Поправить параметры метода (DTO), доделать выгрузку изображений
     @PostMapping("/uploadFranchise")
-    public ResponseEntity<String> uploadFranchise(@RequestParam("file") MultipartFile file,
-                                                  @RequestBody FranchiseEntity franchiseEntity) {
+    public ResponseEntity<String> uploadFranchise(@RequestParam("files") List<MultipartFile> file,
+                                                  @RequestParam("owner") int ownerId,
+                                                  @RequestParam("category") int categoryId,
+                                                  @ModelAttribute FranchiseCreateDTO franchiseCreateDTO) throws IOException {
         try {
 
-            franchiseService.uploadFranchise(franchiseEntity);
+            franchiseService.uploadFranchise(franchiseCreateDTO, file, ownerId, categoryId);
             return ResponseEntity.ok("Франшиза успешно добавлена!");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Произошла ошибка!");
         }
     }
 
-   /* @PostMapping("/uploadImage")
-    public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file) {
-        try {
-            // Преобразуем MultipartFile в массив байтов
-            byte[] imageData = file.getBytes();
-
-            // Сохраняем изображение с использованием сервиса imageService
-            testImageService.saveImages(imageData);
-
-            // Возвращаем ответ с ID сохраненного изображения
-            return ResponseEntity.status(HttpStatus.CREATED)
-                    .body("Изображение успешно загружено.");
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Ошибка при загрузке изображения.");
-        }
-    }*/
-
+/*
     @GetMapping("/upload/{id}")
     public ResponseEntity<?> getImageById(@PathVariable int id) {
-        return ResponseEntity.ok(imageService.getImage(id).getImageData());
-    }
+        byte[] imageData = imageService.getImage(id).getImageData();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.IMAGE_JPEG);
+        return ResponseEntity.ok().headers(headers).body(imageData);
+    }*/
 }
