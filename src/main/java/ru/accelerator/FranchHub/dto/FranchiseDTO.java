@@ -3,8 +3,10 @@ package ru.accelerator.FranchHub.dto;
 import lombok.Data;
 
 @Data
-public class FranchiseCreateDTO {
+public class FranchiseDTO {
+    private int franchise_id;
     private String title;
+    private String shortDescription;
     private String juridicalInformation;
     private String innLink;
     private short yearOfCompanyOpening;
@@ -35,4 +37,7 @@ public class FranchiseCreateDTO {
     private String inWhichCitiesShouldIOpenAFranchise;
     private String advantagesOverCompetitors;
     private String requiredNumberOfEmployees;
+    private int owner;
+    private int category;
+    private String[] images;
 }

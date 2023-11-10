@@ -42,9 +42,7 @@ public class ImageService {
         return fileCount + extension;
     }
 
-    public String[] listFilesInDirectory(int id) throws IOException {
-        // todo: этот метод используй в DTO детального экрана для поля photo[].
-        //  возможно его всётаки стоит сделать static
+    public String[] listFilesInDirectory(int id) {
         Path directoryPath = Paths.get(PHOTO_PATH, String.valueOf(id));
         String[] files = null;
         try {

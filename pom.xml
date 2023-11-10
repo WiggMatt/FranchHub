@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>ru.accelerator</groupId>
 	<artifactId>FranchHub</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>0.1.0-SNAPSHOT</version>
 	<name>FranchHub</name>
 	<description>Franchise catalog</description>
 	<properties>
@@ -68,6 +68,19 @@
 			<artifactId>postgresql</artifactId>
 			<version>42.6.0</version>
 		</dependency>
+		<!-- Для преобразования моделей -->
+		<dependency>
+			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct</artifactId>
+			<version>1.5.3.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct-processor</artifactId>
+			<version>1.5.5.Final</version>
+		</dependency>
+
+
 	</dependencies>
 
 	<build>
