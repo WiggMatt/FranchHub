@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.accelerator.FranchHub.dto.FranchiseDTO;
 import ru.accelerator.FranchHub.dto.FranchiseHomeScreenDTO;
 import ru.accelerator.FranchHub.entity.FranchiseEntity;
+import ru.accelerator.FranchHub.exceptions.CustomGetFranchiseInformationException;
 import ru.accelerator.FranchHub.exceptions.FranchiseAlreadyExistException;
 import ru.accelerator.FranchHub.repository.CategoryRepository;
 import ru.accelerator.FranchHub.repository.FranchiseRepository;
@@ -26,19 +27,28 @@ public class FranchiseService {
     @Autowired
     private ImageService imageService;
 
-    public Iterable<FranchiseHomeScreenDTO> readAll() {
-        return () -> StreamSupport.stream(franchiseRepository.findAll().spliterator(), false)
-                .map(franchiseMapper::toHomeScreenDTO)
-                .iterator();
+    public Iterable<FranchiseHomeScreenDTO> getAllFranchises() {
+        try {
+            return () -> StreamSupport.stream(franchiseRepository.findAll().spliterator(), false)
+                    .map(franchiseMapper::toHomeScreenDTO)
+                    .iterator();
+        } catch (Exception e) {
+            throw new CustomGetFranchiseInformationException("Ошибка при чтении данных", e);
+        }
     }
 
-    public FranchiseDTO getDetail(int id) {
-        FranchiseDTO franchiseDTO = franchiseMapper.tCreateDto(franchiseRepository.findById(id));
-        franchiseDTO.setImages(imageService.listFilesInDirectory(id));
-        return franchiseDTO;
+    public FranchiseDTO getDetailOfFranchise(int id) {
+        try {
+            FranchiseDTO franchiseDTO = franchiseMapper.tCreateDto(franchiseRepository.findById(id));
+            franchiseDTO.setImages(imageService.listFilesInDirectory(id));
+            return franchiseDTO;
+        } catch (Exception e) {
+            throw new CustomGetFranchiseInformationException("Ошибка при чтении данных", e);
+        }
+
     }
 
-    public void uploadFranchise(FranchiseDTO franchiseDTO)
+    public void addFranchise(FranchiseDTO franchiseDTO)
             throws FranchiseAlreadyExistException {
         if (franchiseRepository.findById(franchiseDTO.getFranchise_id()) != null) {
             throw new FranchiseAlreadyExistException("Франшиза с таким названием уже существует");

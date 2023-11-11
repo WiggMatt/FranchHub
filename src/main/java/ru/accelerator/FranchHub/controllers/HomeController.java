@@ -16,19 +16,19 @@ public class HomeController {
 
     @GetMapping("/home")
     public Iterable<FranchiseHomeScreenDTO> listFranchises() {
-        return franchiseService.readAll();
+        return franchiseService.getAllFranchises();
     }
 
     @GetMapping("/detail/{franchise_id}")
     public ResponseEntity<FranchiseDTO> franchiseDetail(@PathVariable int franchise_id) {
-        return ResponseEntity.ok(franchiseService.getDetail(franchise_id));
+        return ResponseEntity.ok(franchiseService.getDetailOfFranchise(franchise_id));
     }
 
     @PostMapping("/uploadFranchise")
     public ResponseEntity<String> uploadFranchise(@ModelAttribute FranchiseDTO franchiseDTO) {
         try {
 
-            franchiseService.uploadFranchise(franchiseDTO);
+            franchiseService.addFranchise(franchiseDTO);
             return ResponseEntity.ok("Франшиза успешно добавлена!");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Произошла ошибка!");

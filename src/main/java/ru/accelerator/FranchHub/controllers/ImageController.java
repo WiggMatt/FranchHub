@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import ru.accelerator.FranchHub.exceptions.FileListException;
 import ru.accelerator.FranchHub.exceptions.PhotoNotFoundException;
 import ru.accelerator.FranchHub.services.ImageService;
 
@@ -27,7 +28,7 @@ public class ImageController {
             // Передача файла в службу для сохранения
             imageService.saveFile(id, file);
             return ResponseEntity.ok("Файл успешно сохранен");
-        } catch (IOException e) {
+        } catch (IOException | FileListException e) {
             return ResponseEntity.status(500).body("Ошибка при сохранении файла");
         }
     }
@@ -38,7 +39,7 @@ public class ImageController {
 
         try {
             return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_TYPE, MediaType.IMAGE_PNG_VALUE)
+                    .header(HttpHeaders.CONTENT_TYPE, MediaType.ALL_VALUE)
                     .body(imageService.getPhoto(id, photoName));
         } catch (PhotoNotFoundException e){
             String errorMessage = "File not found: " + photoName;
