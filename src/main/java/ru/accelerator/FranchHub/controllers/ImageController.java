@@ -1,8 +1,6 @@
 package ru.accelerator.FranchHub.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -25,7 +23,6 @@ public class ImageController {
     @PostMapping("company/{id}/photo")
     public ResponseEntity<String> companyPhotoSetter(@PathVariable int id, @RequestParam("file") MultipartFile file) {
         try {
-            // Передача файла в службу для сохранения
             imageService.saveFile(id, file);
             return ResponseEntity.ok("Файл успешно сохранен");
         } catch (IOException | FileListException e) {
@@ -35,16 +32,14 @@ public class ImageController {
 
     @GetMapping("company/{id}/photo/{photoName:.+}")
     public ResponseEntity<Object> companyPhotoGetter(@PathVariable int id,
-                                                       @PathVariable("photoName") String photoName) throws IOException {
-
+                                                     @PathVariable("photoName") String photoName) throws IOException {
         try {
             return ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_TYPE, MediaType.ALL_VALUE)
                     .body(imageService.getPhoto(id, photoName));
         } catch (PhotoNotFoundException e){
-            String errorMessage = "File not found: " + photoName;
+            String errorMessage = "Файл не найден: " + photoName;
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorMessage);
         }
-
     }
 }

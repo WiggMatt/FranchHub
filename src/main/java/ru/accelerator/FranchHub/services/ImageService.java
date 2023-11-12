@@ -14,6 +14,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 @Service
 public class ImageService {
@@ -28,7 +30,6 @@ public class ImageService {
             if (!Files.exists(directoryPath)) {
                 Files.createDirectories(directoryPath);
             }
-
             // Создание порядкового имени файла
             String fileName = getNextFileName(directoryPath, Objects.requireNonNull(file.getOriginalFilename()));
 
@@ -39,7 +40,7 @@ public class ImageService {
             Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
             // Вызов метода listFilesInDirectory(id) после успешного сохранения файла
-            listFilesInDirectory(id);
+            listFilesInDirectory(id, false);
 
         } catch (IOException e) {
             // Ловим IOException и выбрасываем его дальше
@@ -52,7 +53,10 @@ public class ImageService {
     private String getNextFileName(Path directory, String originalFilename) throws IOException {
         try {
             String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
-            int fileCount = Files.list(directory).mapToInt(path -> 1).sum() + 1;
+            int fileCount;
+            try (Stream<Path> filesStream = Files.list(directory)) {
+                fileCount = filesStream.mapToInt(path -> 1).sum() + 1;
+            }
             System.out.println(Files.list(directory));
             return fileCount + extension;
         } catch (IOException e) {
@@ -60,19 +64,31 @@ public class ImageService {
         }
     }
 
-    public String[] listFilesInDirectory(int id) throws FileListException {
+
+    public String[] listFilesInDirectory(int id, boolean getFirstOnly) throws FileListException {
         Path directoryPath = Paths.get(PHOTO_PATH, String.valueOf(id));
-        String[] files;
         try {
-            files = Files.list(directoryPath)
-                    .map(Path::getFileName)
-                    .map(Path::toString)
-                    .toArray(String[]::new);
+            try (Stream<Path> fileStream = Files.list(directoryPath)) {
+                if (getFirstOnly) {
+                    Optional<String> firstFileName = fileStream
+                            .map(Path::getFileName)
+                            .map(Path::toString)
+                            .findFirst();
+                    return firstFileName.map(name -> new String[]{name}).orElse(new String[]{});
+                } else {
+                    String[] fileNames = fileStream
+                            .filter(Files::isRegularFile)
+                            .map(Path::getFileName)
+                            .map(Path::toString)
+                            .toArray(String[]::new);
+                    return fileNames.length > 0 ? fileNames : new String[]{};
+                }
+            }
         } catch (IOException e) {
-            throw new FileListException("Ошибка при чтении файла из дериктории", e);
+            throw new FileListException("Ошибка при чтении файла из директории", e);
         }
-        return files;
     }
+
 
 
     public Resource getPhoto(int id, String photoName) throws IOException {

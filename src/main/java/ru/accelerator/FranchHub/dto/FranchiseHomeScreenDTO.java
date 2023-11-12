@@ -8,5 +8,5 @@ public class FranchiseHomeScreenDTO {
     private String title;
     private String investmentsFromAndTo;
     private String shortDescription;
-
+    private String photoName;
 }

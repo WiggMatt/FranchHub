@@ -6,6 +6,7 @@ import ru.accelerator.FranchHub.dto.FranchiseDTO;
 import ru.accelerator.FranchHub.dto.FranchiseHomeScreenDTO;
 import ru.accelerator.FranchHub.entity.FranchiseEntity;
 import ru.accelerator.FranchHub.exceptions.CustomGetFranchiseInformationException;
+import ru.accelerator.FranchHub.exceptions.FileListException;
 import ru.accelerator.FranchHub.exceptions.FranchiseAlreadyExistException;
 import ru.accelerator.FranchHub.repository.CategoryRepository;
 import ru.accelerator.FranchHub.repository.FranchiseRepository;
@@ -30,7 +31,16 @@ public class FranchiseService {
     public Iterable<FranchiseHomeScreenDTO> getAllFranchises() {
         try {
             return () -> StreamSupport.stream(franchiseRepository.findAll().spliterator(), false)
-                    .map(franchiseMapper::toHomeScreenDTO)
+                    .map(franchiseEntity -> {
+                        String[] firstPhoto;
+                        try {
+                            firstPhoto = imageService.listFilesInDirectory(franchiseEntity.getFranchise_id(), true);
+                        } catch (FileListException e) {
+                            throw new RuntimeException(e);
+                        }
+                        FranchiseHomeScreenDTO dto = franchiseMapper.toHomeScreenDTO(franchiseEntity);
+                        dto.setPhotoName(firstPhoto.length > 0 ? firstPhoto[0] : null);
+                        return dto;})
                     .iterator();
         } catch (Exception e) {
             throw new CustomGetFranchiseInformationException("Ошибка при чтении данных", e);
@@ -40,7 +50,7 @@ public class FranchiseService {
     public FranchiseDTO getDetailOfFranchise(int id) {
         try {
             FranchiseDTO franchiseDTO = franchiseMapper.tCreateDto(franchiseRepository.findById(id));
-            franchiseDTO.setImages(imageService.listFilesInDirectory(id));
+            franchiseDTO.setImages(imageService.listFilesInDirectory(id, false));
             return franchiseDTO;
         } catch (Exception e) {
             throw new CustomGetFranchiseInformationException("Ошибка при чтении данных", e);
