@@ -18,9 +18,9 @@ public class FranchiseDTO {
     private String dateOfTrademarkRegistration;
     private String linkToTheFranchiseWebsite;
     private String investmentsFromAndTo;
-    private String lumpSumPayment;
+    private int lumpSumPayment;
     private String royaltiesMonthlyDeductions;
-    private String paybackPeriod;
+    private short paybackPeriod;
     private String monthlyProfit;
     private short businessLaunchDeadline;
     private String geographyOfDevelopment;
@@ -36,7 +36,7 @@ public class FranchiseDTO {
     private String costsAtTheFranchiseLaunchStage;
     private String inWhichCitiesShouldIOpenAFranchise;
     private String advantagesOverCompetitors;
-    private String requiredNumberOfEmployees;
+    private short requiredNumberOfEmployees;
     private int owner;
     private int category;
     private String[] images;

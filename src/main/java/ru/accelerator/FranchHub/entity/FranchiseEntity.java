@@ -36,12 +36,12 @@ public class FranchiseEntity {
     private String linkToTheFranchiseWebsite;
     @Column(nullable = false, columnDefinition = "TEXT")
     private String investmentsFromAndTo;
-    @Column(nullable = false, columnDefinition = "TEXT")
-    private String lumpSumPayment;
+    @Column(nullable = false, columnDefinition = "INTEGER")
+    private int lumpSumPayment;
     @Column(nullable = false, columnDefinition = "TEXT")
     private String royaltiesMonthlyDeductions;
-    @Column(nullable = false, columnDefinition = "TEXT")
-    private String paybackPeriod;
+    @Column(nullable = false, columnDefinition = "SMALLINT")
+    private short paybackPeriod;
     @Column(nullable = false, columnDefinition = "TEXT")
     private String monthlyProfit;
     @Column(nullable = false, columnDefinition = "SMALLINT")
@@ -72,8 +72,8 @@ public class FranchiseEntity {
     private String inWhichCitiesShouldIOpenAFranchise;
     @Column(nullable = false, columnDefinition = "TEXT")
     private String advantagesOverCompetitors;
-    @Column(nullable = false, columnDefinition = "TEXT")
-    private String requiredNumberOfEmployees;
+    @Column(nullable = false, columnDefinition = "SMALLINT")
+    private short requiredNumberOfEmployees;
     @ManyToOne
     @JoinColumn(name = "category_id")
     private CategoryEntity category;

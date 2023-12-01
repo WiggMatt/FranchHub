@@ -7,4 +7,5 @@ import ru.accelerator.FranchHub.entity.FranchiseEntity;
 @Repository
 public interface FranchiseRepository extends CrudRepository<FranchiseEntity, Integer> {
     FranchiseEntity findById (int id);
+    FranchiseEntity findByTitle (String title);
 }

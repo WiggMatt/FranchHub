@@ -1,17 +1,22 @@
 package ru.accelerator.FranchHub.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.accelerator.FranchHub.dto.FranchiseDTO;
 import ru.accelerator.FranchHub.dto.FranchiseHomeScreenDTO;
+import ru.accelerator.FranchHub.entity.CategoryEntity;
 import ru.accelerator.FranchHub.entity.FranchiseEntity;
+import ru.accelerator.FranchHub.entity.LocationMapEntity;
 import ru.accelerator.FranchHub.exceptions.CustomGetFranchiseInformationException;
 import ru.accelerator.FranchHub.exceptions.FileListException;
 import ru.accelerator.FranchHub.exceptions.FranchiseAlreadyExistException;
 import ru.accelerator.FranchHub.repository.CategoryRepository;
 import ru.accelerator.FranchHub.repository.FranchiseRepository;
+import ru.accelerator.FranchHub.repository.MapRepository;
 import ru.accelerator.FranchHub.repository.UserRepository;
 import ru.accelerator.FranchHub.utils.FranchiseMapper;
+
 
 import java.util.stream.StreamSupport;
 
@@ -27,6 +32,10 @@ public class FranchiseService {
     private FranchiseMapper franchiseMapper;
     @Autowired
     private ImageService imageService;
+    @Autowired
+    private MapRepository mapRepository;
+    @Value("${photo.path}")
+    private String PHOTO_PATH;
 
     public Iterable<FranchiseHomeScreenDTO> getAllFranchises() {
         try {
@@ -55,12 +64,11 @@ public class FranchiseService {
         } catch (Exception e) {
             throw new CustomGetFranchiseInformationException("Ошибка при чтении данных", e);
         }
-
     }
 
     public void addFranchise(FranchiseDTO franchiseDTO)
             throws FranchiseAlreadyExistException {
-        if (franchiseRepository.findById(franchiseDTO.getFranchise_id()) != null) {
+        if (franchiseRepository.findByTitle(franchiseDTO.getTitle()) != null) {
             throw new FranchiseAlreadyExistException("Франшиза с таким названием уже существует");
         }
 
@@ -69,5 +77,22 @@ public class FranchiseService {
         franchiseEntity.setCategory(categoryRepository.findById(franchiseDTO.getCategory()));
 
         franchiseRepository.save(franchiseEntity);
+    }
+
+    public LocationMapEntity getMap(int id) {
+        try {
+            return mapRepository.findByFranchiseId(id);
+        } catch (Exception e) {
+            throw new CustomGetFranchiseInformationException("Ошибка при чтении данных", e);
+        }
+    }
+
+    public void setMap(int id, LocationMapEntity locationMapEntity) {
+        locationMapEntity.setFranchiseId(id);
+        mapRepository.save(locationMapEntity);
+    }
+
+    public Iterable<CategoryEntity> getCategories() {
+        return categoryRepository.findAll();
     }
 }
