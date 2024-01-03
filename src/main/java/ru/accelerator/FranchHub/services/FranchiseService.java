@@ -18,6 +18,7 @@ import ru.accelerator.FranchHub.repository.UserRepository;
 import ru.accelerator.FranchHub.utils.FranchiseMapper;
 
 
+import java.lang.reflect.Field;
 import java.util.stream.StreamSupport;
 
 @Service
@@ -88,8 +89,37 @@ public class FranchiseService {
     }
 
     public void setMap(int id, LocationMapEntity locationMapEntity) {
-        locationMapEntity.setFranchiseId(id);
-        mapRepository.save(locationMapEntity);
+        try {
+            // Проверяем, существует ли франшиза с заданным ID
+            FranchiseEntity franchiseEntity = franchiseRepository.findById(id);
+
+            if (franchiseEntity == null) {
+                throw new CustomGetFranchiseInformationException("Франшиза с ИД " + id + " не найдена");
+            }
+
+            // Получаем карту для данной франшизы
+            LocationMapEntity existingMap = mapRepository.findByFranchiseId(id);
+
+            // Если карта уже существует, обновляем её данные
+            if (existingMap != null) {
+                // Иначе, обновляем существующую запись
+                Field[] fields = LocationMapEntity.class.getDeclaredFields();
+                for (Field field : fields) {
+                    field.setAccessible(true);
+                    Object value = field.get(locationMapEntity);
+                    if (value != null) {
+                        field.set(existingMap, value);
+                    }
+                }
+                mapRepository.save(existingMap);
+            } else {
+                // Если карты еще нет, создаем новую и привязываем к франшизе
+                locationMapEntity.setFranchiseId(id);
+                mapRepository.save(locationMapEntity);
+            }
+        } catch (Exception e) {
+            throw new CustomGetFranchiseInformationException("Ошибка при установке данных карты", e);
+        }
     }
 
     public Iterable<CategoryEntity> getCategories() {

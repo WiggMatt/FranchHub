@@ -2,6 +2,7 @@ package ru.accelerator.FranchHub.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
 
 @Entity
 @Table(name = "location_map")

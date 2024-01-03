@@ -1,12 +1,14 @@
 package ru.accelerator.FranchHub.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.accelerator.FranchHub.dto.FranchiseDTO;
 import ru.accelerator.FranchHub.dto.FranchiseHomeScreenDTO;
 import ru.accelerator.FranchHub.entity.CategoryEntity;
 import ru.accelerator.FranchHub.entity.LocationMapEntity;
+import ru.accelerator.FranchHub.exceptions.CustomGetFranchiseInformationException;
 import ru.accelerator.FranchHub.services.FranchiseService;
 
 
@@ -36,9 +38,23 @@ public class HomeController {
         }
     }
 
-    @PostMapping("/setMap/{franchise_id}")
-    public ResponseEntity<String> setFranchiseMap(@PathVariable int franchise_id,
-                                         @RequestBody LocationMapEntity locationMapEntity) {
+    @PostMapping("/setMap")
+    public ResponseEntity<String> setFranchiseMap(@RequestBody LocationMapEntity locationMapEntity,
+                                                  @RequestParam int franchise_id) {
+        try {
+            franchiseService.setMap(franchise_id, locationMapEntity);
+            return ResponseEntity.ok("Карта успешно добавлена!");
+        } catch (CustomGetFranchiseInformationException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Франшиза не найдена");
+        }
+        catch (Exception e) {
+            return ResponseEntity.badRequest().body("Произошла ошибка!");
+        }
+    }
+
+    @PutMapping("/setMap")
+    public ResponseEntity<String> putFranchiseMap(@RequestBody LocationMapEntity locationMapEntity,
+                                                  @RequestParam int franchise_id) {
         try {
             franchiseService.setMap(franchise_id, locationMapEntity);
             return ResponseEntity.ok("Карта успешно добавлена!");
@@ -47,8 +63,8 @@ public class HomeController {
         }
     }
 
-    @GetMapping("/getMap/{franchise_id}")
-    public ResponseEntity<LocationMapEntity> getFranchiseMap(@PathVariable int franchise_id) {
+    @GetMapping("/getMap")
+    public ResponseEntity<LocationMapEntity> getFranchiseMap(@RequestParam int franchise_id/*@PathVariable int franchise_id*/) {
         return ResponseEntity.ok(franchiseService.getMap(franchise_id));
     }
 
